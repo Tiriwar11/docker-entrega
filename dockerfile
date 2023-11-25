@@ -1,24 +1,20 @@
-# Usa una imagen de Node.js basada en alpine como base
-FROM node:14-alpine
+# Usa la imagen oficial de Node.js como base
+FROM node:14
 
-# Establece el directorio de trabajo dentro del contenedor
-WORKDIR /usr/src/app
+# Establece el directorio de trabajo en la aplicación
+WORKDIR /usr/src/app/app
 
-# Copia primero solo los archivos necesarios para instalar las dependencias
+# Copia el archivo package.json y package-lock.json (si existe)
 COPY package*.json ./
 
-# Instala las dependencias, incluyendo las de desarrollo
+# Instala las dependencias
 RUN npm install
 
-# Elimina las dependencias de desarrollo después de la instalación
-RUN npm prune --production
-
-# Copia todo el código fuente al directorio de trabajo del contenedor
+# Copia el resto de la aplicación
 COPY . .
 
-# Cambiado de CMD a ENTRYPOINT para permitir el paso de argumentos
-ENTRYPOINT ["npm", "run", "build"]
-
-# Ajustado el puerto para reflejar el puerto correcto de tu aplicación
+# Expone el puerto 3000 (puedes cambiarlo según la configuración de tu aplicación)
 EXPOSE 3000
 
+# Comando para ejecutar la aplicación
+CMD ["npm", "start"]
